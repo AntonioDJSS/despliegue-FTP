@@ -12,12 +12,21 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v2
+        with:
+          ref: main  
+          submodules: recursive  
+          persist-credentials: false
 
-      - name: Sincronizar archivos con el servidor
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4  
+        with:
+          node-version: '16'
+
+      - name: Despliegue FTP
+        uses: wky0615/ftp-action@v2
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          port: 21
-          server-dir: ./
+          local_dir: ./
+          remote_dir: /public_html
